@@ -49,6 +49,9 @@ app.post('/api/scan', (req, res) => {
   nmap.on('error', (err) => {
     res.write(`\nFailed to start nmap: ${err.message}`);
     res.end();
+  });
+});
+
 const PORT = 3001;
 
 app.post('/api/add-host', (req, res) => {

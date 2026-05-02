@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   Terminal, Shield, Activity, Zap, Server,
-  Search, Play, AlertCircle, Eye, Network
+  Search, Play, AlertCircle, Eye, Network,
+  Globe, Save, CheckCircle
 } from 'lucide-react';
 
 const NMAP_OPTIONS = [
@@ -20,6 +21,13 @@ function App() {
   const [selectedOptions, setSelectedOptions] = useState(['sS', 'v']);
   const [output, setOutput] = useState('');
   const [isScanning, setIsScanning] = useState(false);
+  
+  // DNS State
+  const [dnsIp, setDnsIp] = useState('10.10.10.10');
+  const [dnsHostname, setDnsHostname] = useState('example.htb');
+  const [dnsStatus, setDnsStatus] = useState('');
+  const [isAddingHost, setIsAddingHost] = useState(false);
+
   const terminalRef = useRef(null);
 
   const toggleOption = (id) => {
