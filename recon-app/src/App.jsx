@@ -76,6 +76,36 @@ function App() {
     }
   };
 
+  const handleAddHost = async () => {
+    if (!dnsIp || !dnsHostname) return;
+    
+    setIsAddingHost(true);
+    setDnsStatus('');
+    
+    try {
+      const response = await fetch('http://localhost:3001/api/add-host', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ip: dnsIp, hostname: dnsHostname }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setDnsStatus(`Success: ${data.message}`);
+      } else {
+        setDnsStatus(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      setDnsStatus(`Error: ${error.message}`);
+    } finally {
+      setIsAddingHost(false);
+      setTimeout(() => setDnsStatus(''), 5000);
+    }
+  };
+
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
@@ -109,6 +139,65 @@ function App() {
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-secondary)' }}>
             $ {getCommandString()}
           </div>
+        </div>
+
+        <div className="glass-panel" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Globe size={16} color="var(--accent-secondary)" />
+            <span style={{ fontSize: '14px', fontWeight: '600' }}>Local DNS Mapping</span>
+          </div>
+          
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <div className="input-group" style={{ marginBottom: 0, flex: 1 }}>
+              <input 
+                type="text" 
+                className="text-input" 
+                style={{ padding: '8px', fontSize: '12px' }}
+                value={dnsIp}
+                onChange={(e) => setDnsIp(e.target.value)}
+                placeholder="IP Address"
+              />
+            </div>
+            <div className="input-group" style={{ marginBottom: 0, flex: 1 }}>
+              <input 
+                type="text" 
+                className="text-input" 
+                style={{ padding: '8px', fontSize: '12px' }}
+                value={dnsHostname}
+                onChange={(e) => setDnsHostname(e.target.value)}
+                placeholder="Hostname"
+              />
+            </div>
+          </div>
+          
+          <button 
+            className="btn btn-secondary" 
+            onClick={handleAddHost}
+            disabled={isAddingHost || !dnsIp || !dnsHostname}
+            style={{ padding: '8px', fontSize: '12px' }}
+          >
+            {isAddingHost ? (
+              <div className="loader" style={{ width: '12px', height: '12px' }}></div>
+            ) : (
+              <>
+                <Save size={14} />
+                Add to /etc/hosts
+              </>
+            )}
+          </button>
+          
+          {dnsStatus && (
+            <div style={{ 
+              fontSize: '11px', 
+              color: dnsStatus.startsWith('Success') ? 'var(--success)' : 'var(--danger)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}>
+              {dnsStatus.startsWith('Success') ? <CheckCircle size={12} /> : <AlertCircle size={12} />}
+              {dnsStatus}
+            </div>
+          )}
         </div>
 
         <button
