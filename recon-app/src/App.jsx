@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { 
-  Terminal, Shield, Activity, Zap, Server, 
-  Search, Play, AlertCircle, Eye, Network 
+import {
+  Terminal, Shield, Activity, Zap, Server,
+  Search, Play, AlertCircle, Eye, Network
 } from 'lucide-react';
 
 const NMAP_OPTIONS = [
@@ -23,7 +23,7 @@ function App() {
   const terminalRef = useRef(null);
 
   const toggleOption = (id) => {
-    setSelectedOptions(prev => 
+    setSelectedOptions(prev =>
       prev.includes(id) ? prev.filter(o => o !== id) : [...prev, id]
     );
   };
@@ -35,7 +35,7 @@ function App() {
 
   const handleScan = async () => {
     if (!target) return;
-    
+
     setIsScanning(true);
     setOutput(`$ ${getCommandString()}\nStarting scan...\n\n`);
 
@@ -79,13 +79,13 @@ function App() {
       <div className="sidebar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
           <Shield color="var(--accent-primary)" size={32} />
-          <h1>Nexus Recon</h1>
+          <h1>K3yb0ard Recon</h1>
         </div>
-        
+
         <div className="input-group">
           <label>Target IP / Hostname</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             className="text-input"
             value={target}
             onChange={(e) => setTarget(e.target.value)}
@@ -103,8 +103,8 @@ function App() {
           </div>
         </div>
 
-        <button 
-          className="btn btn-primary" 
+        <button
+          className="btn btn-primary"
           onClick={handleScan}
           disabled={isScanning || !target}
           style={{ marginTop: 'auto', opacity: isScanning || !target ? 0.5 : 1 }}
@@ -140,18 +140,18 @@ function App() {
               <AlertCircle size={20} color="var(--accent-secondary)" />
               <h2>Tactical Nmap Options</h2>
             </div>
-            
+
             <div className="options-grid">
               {NMAP_OPTIONS.map(opt => {
                 const isSelected = selectedOptions.includes(opt.id);
                 return (
-                  <div 
-                    key={opt.id} 
+                  <div
+                    key={opt.id}
                     className={`option-item ${isSelected ? 'selected' : ''}`}
                     onClick={() => toggleOption(opt.id)}
                   >
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       className="option-checkbox"
                       checked={isSelected}
                       readOnly
